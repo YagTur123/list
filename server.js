@@ -5,7 +5,7 @@ const Perfume = require('./models/perfume'); // Modeli içe aktar
 const app = express();
 
 // MongoDB URI
-const mongoURI = 'mongodb+srv://yagiz:<db_password>@cluster0.vrkqh.mongodb.net/?retryWrites=true&w=majority';
+const mongoURI = 'mongodb+srv://yagiz:<db_yagiz123>@cluster0.vrkqh.mongodb.net/?retryWrites=true&w=majority';
 
 // Veritabanına bağlan
 mongoose.connect(mongoURI, {
