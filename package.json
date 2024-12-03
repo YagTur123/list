@@ -1,13 +1,13 @@
 {
-  "name": "perfume-creator",
+  "name": "parfum-esans-db",
   "version": "1.0.0",
-  "description": "Perfume Creator App",
+  "description": "Parfüm esans veritabanı",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "mongoose": "^7.0.0"
+    "express": "^4.18.1",
+    "mongoose": "^6.5.3"
   }
 }
