@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parfüm Esans Veritabanı</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+        }
+        header {
+            background-color: #4caf50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        nav {
+            background-color: #007bff;
+            color: white;
+            border-bottom: 2px solid #ddd;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            padding: 15px 30px;
+            display: block;
+            font-weight: bold;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        nav ul li a.active {
+            color: #fff;
+            background-color: #0056b3;
+            border-bottom: 2px solid #fff;
+        }
+        .container {
+            padding: 20px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .form-container, .data-container, .average-container {
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .form-container label {
+            display: block;
+            margin: 15px 0 5px;
+            font-size: 14px;
+            color: #333;
+        }
+        .form-container input, .form-container textarea, .form-container select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .form-container input.error {
+            border: 1px solid red;
+            background-color: #ffe6e6;
+        }
+        .form-container button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4caf50;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+        .form-container .delete {
+            background-color: #f44336;
+            margin-left: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table th, table td {
+            padding: 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        table th {
+            background-color: #f4f4f4;
+            font-size: 16px;
+        }
+        table td {
+            font-size: 14px;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        .average-container table {
+            margin-top: 20px;
+        }
+        .average-container td {
+            font-size: 14px;
+        }
+        .table-header {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: bold;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+        }
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .delete-btn:hover {
+            background-color: #e03e2d;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Parfüm Esans Veritabanı</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#" class="tab-link active" data-tab="all-data">Tüm Veriler</a></li>
+            <li><a href="#" class="tab-link" data-tab="average-data">Ortalama Veriler</a></li>
+            <li><a href="#" class="tab-link" data-tab="add-data">Veri Ekle</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <!-- Tüm Veriler -->
+        <div id="all-data" class="tab-content active">
+            <div class="data-container">
+                <h2 class="table-header">Tüm Veriler</h2>
+                <div class="table-container">
+                    <table id="data-table">
+                        <thead>
+                            <tr>
+                                <th>Parfüm Adı</th>
+                                <th>Esans (ml)</th>
+                                <th>Esans (%)</th>
+                                <th>Etil Alkol (ml)</th>
+                                <th>Etil Alkol (%)</th>
+                                <th>Saf Su (ml)</th>
+                                <th>Saf Su (%)</th>
+                                <th>Şişe (ml)</th>
+                                <th>Yorum</th>
+                                <th>Nick</th>
+                                <th>Sil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Veriler buraya eklenecek -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ortalama Veriler -->
+        <div id="average-data" class="tab-content">
+            <div class="average-container">
+                <h2 class="table-header">Ortalama Veriler</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parfüm Adı</th>
+                                <th>Esans (%)</th>
+                                <th>Etil Alkol (%)</th>
+                                <th>Saf Su (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Ortalama veriler buraya eklenecek -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Veri Ekle -->
+        <div id="add-data" class="tab-content">
+            <div class="form-container">
+                <h2>Veri Ekle</h2>
+                <label>Parfüm Adı</label>
+                <input id="perfume-name" type="text" placeholder="Parfüm adı girin..." list="perfume-list">
+                <datalist id="perfume-list">
+                    <!-- Kullanıcı tarafından girilen parfüm isimleri buraya eklenecek -->
+                </datalist>
+                <label>Esans (ml)</label>
+                <input id="essence-ml" type="number" placeholder="Esans ml girin...">
+                <label>Esans (%)</label>
+                <input id="essence-percent" type="number" placeholder="Esans yüzdesi girin...">
+                <label>Etil Alkol (ml)</label>
+                <input id="ethanol-ml" type="number" placeholder="Etil alkol ml girin...">
+                <label>Etil Alkol (%)</label>
+                <input id="ethanol-percent" type="number" placeholder="Etil alkol yüzdesi girin...">
+                <label>Saf Su (ml)</label>
+                <input id="water-ml" type="number" placeholder="Saf su ml girin...">
+                <label>Saf Su (%)</label>
+                <input id="water-percent" type="number" placeholder="Saf su yüzdesi girin...">
+                <label>Şişe Kapasitesi (ml)</label>
+                <input id="bottle-ml" type="number" placeholder="Şişe kapasitesi girin...">
+                <label>Yorum</label>
+                <textarea id="comments" placeholder="Yorum girin..."></textarea>
+                <label>Nick</label>
+                <input id="nickname" type="text" placeholder="Adınızı girin...">
+                <label>Kilit Kodu (Kendi belirlediğiniz kodu girin)</label>
+                <input id="lock-code" type="number" placeholder="Kilit kodu girin...">
+                <button class="save">Onayla</button>
+                <p class="error-message" id="error-message"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // localStorage'den veriyi yükle
+        window.onload = () => {
+            const storedData = localStorage.getItem('perfumeData');
+            if (storedData) {
+                allData = JSON.parse(storedData);
+                renderTable();
+                calculateAverage();
+            }
+        };
+
+        let perfumeList = [];
+        let allData = [];
+
+        const tabs = document.querySelectorAll('.tab-link');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const saveButton = document.querySelector('.save');
+        const tableBody = document.querySelector('#data-table tbody');
+        const averageTableBody = document.querySelector('#average-data .average-container table tbody');
+        const perfumeInput = document.getElementById('perfume-name');
+        const datalist = document.getElementById('perfume-list');
+        const lockCodeInput = document.getElementById('lock-code');
+        const errorMessage = document.getElementById('error-message');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', e => {
+                e.preventDefault();
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
+            });
+        });
+
+        saveButton.addEventListener('click', () => {
+            const perfumeName = perfumeInput.value;
+            const essenceMl = +document.getElementById('essence-ml').value;
+            const essencePercent = +document.getElementById('essence-percent').value;
+            const ethanolMl = +document.getElementById('ethanol-ml').value;
+            const ethanolPercent = +document.getElementById('ethanol-percent').value;
+            const waterMl = +document.getElementById('water-ml').value;
+            const waterPercent = +document.getElementById('water-percent').value;
+            const bottleMl = +document.getElementById('bottle-ml').value;
+            const comments = document.getElementById('comments').value;
+            const nickname = document.getElementById('nickname').value;
+            const lockCode = lockCodeInput.value;
+
+            // Kilit kodu kontrolü
+            if (!lockCode || lockCode.length !== 5) {
+                errorMessage.textContent = 'Lütfen geçerli bir kilit kodu girin!';
+                return;
+            }
+
+            // Kontroller
+            if (essenceMl + ethanolMl + waterMl > bottleMl) {
+                alert('Toplam miktar şişeyi aşamaz!');
+                return;
+            }
+            if (essencePercent + ethanolPercent + waterPercent > 100) {
+                alert('Toplam yüzde 100\'ü aşamaz!');
+                return;
+            }
+
+            // Verileri ekleme
+            const row = `
+                <tr>
+                    <td>${perfumeName}</td>
+                    <td>${essenceMl}</td>
+                    <td>${essencePercent}</td>
+                    <td>${ethanolMl}</td>
+                    <td>${ethanolPercent}</td>
+                    <td>${waterMl}</td>
+                    <td>${waterPercent}</td>
+                    <td>${bottleMl}</td>
+                    <td>${comments}</td>
+                    <td>${nickname}</td>
+                    <td class="hidden">${lockCode}</td> <!-- Kilit kodu gizlenmiş -->
+                    <td><button class="delete-btn">Sil</button></td>
+                </tr>
+            `;
+            tableBody.insertAdjacentHTML('beforeend', row);
+
+            // Tüm verileri saklamak için
+            allData.push({
+                perfumeName,
+                essencePercent,
+                ethanolPercent,
+                waterPercent,
+                lockCode
+            });
+
+            // Verileri localStorage'a kaydet
+            localStorage.setItem('perfumeData', JSON.stringify(allData));
+
+            // Parfüm adını daha önce eklenmişse tekrar listeye ekleme
+            if (!perfumeList.includes(perfumeName)) {
+                perfumeList.push(perfumeName);
+                const option = document.createElement('option');
+                option.value = perfumeName;
+                datalist.appendChild(option);
+            }
+
+            // Ortalama verileri hesapla
+            calculateAverage();
+
+            alert('Veri eklendi!');
+        });
+
+        function renderTable() {
+            tableBody.innerHTML = '';
+            allData.forEach(data => {
+                const row = `
+                    <tr>
+                        <td>${data.perfumeName}</td>
+                        <td>${data.essencePercent}</td>
+                        <td>${data.ethanolPercent}</td>
+                        <td>${data.waterPercent}</td>
+                        <td><button class="delete-btn">Sil</button></td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+        }
+
+        // Silme işlemi
+        tableBody.addEventListener('click', (e) => {
+            if (e.target && e.target.classList.contains('delete-btn')) {
+                const row = e.target.closest('tr');
+                const perfumeName = row.cells[0].textContent;
+                const lockCode = row.cells[10].textContent;
+
+                // Admin veya doğru kilit kodu
+                const userLockCode = prompt('Veriyi silmek için kilit kodunu girin:');
+                if (userLockCode === "78452" || userLockCode === lockCode) {
+                    row.remove();
+
+                    // Veriyi allData'dan sil
+                    allData = allData.filter(data => data.perfumeName !== perfumeName);
+
+                    // localStorage'a güncellenmiş veriyi kaydet
+                    localStorage.setItem('perfumeData', JSON.stringify(allData));
+
+                    alert('Veri silindi!');
+                } else {
+                    alert('Geçersiz kilit kodu!');
+                }
+            }
+        });
+
+        function calculateAverage() {
+            const averages = {};
+
+            // Verileri isimlere göre grupla
+            allData.forEach(data => {
+                if (!averages[data.perfumeName]) {
+                    averages[data.perfumeName] = { essencePercent: 0, ethanolPercent: 0, waterPercent: 0, count: 0 };
+                }
+                averages[data.perfumeName].essencePercent += data.essencePercent;
+                averages[data.perfumeName].ethanolPercent += data.ethanolPercent;
+                averages[data.perfumeName].waterPercent += data.waterPercent;
+                averages[data.perfumeName].count += 1;
+            });
+
+            // Ortalama verileri hesapla ve tabloyu güncelle
+            averageTableBody.innerHTML = '';
+            Object.keys(averages).forEach(perfumeName => {
+                const averageData = averages[perfumeName];
+                const averageEssence = (averageData.essencePercent / averageData.count).toFixed(2);
+                const averageEthanol = (averageData.ethanolPercent / averageData.count).toFixed(2);
+                const averageWater = (averageData.waterPercent / averageData.count).toFixed(2);
+
+                const row = `
+                    <tr>
+                        <td>${perfumeName}</td>
+                        <td>${averageEssence}%</td>
+                        <td>${averageEthanol}%</td>
+                        <td>${averageWater}%</td>
+                    </tr>
+                `;
+                averageTableBody.insertAdjacentHTML('beforeend', row);
+            });
+        }
+    </script>
+</body>
+</html>
