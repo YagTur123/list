@@ -1,17 +1,13 @@
-const { Schema, model } = require('mongoose');
+const mongoose = require('mongoose');
 
-const perfumeSchema = new Schema({
+const perfumeSchema = new mongoose.Schema({
   perfumeName: String,
-  essenceMl: Number,
   essencePercent: Number,
-  ethanolMl: Number,
   ethanolPercent: Number,
-  waterMl: Number,
   waterPercent: Number,
-  bottleMl: Number,
-  comments: String,
-  nickname: String,
-  lockCode: String,
+  lockCode: String
 });
 
-module.exports = model('Perfume', perfumeSchema);
+const Perfume = mongoose.model('Perfume', perfumeSchema, 'esanslar'); // 'esanslar' koleksiyonunu belirtir
+
+module.exports = Perfume;
