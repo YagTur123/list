@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parfüm Bilgi Deposu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #555;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+        .action-buttons button {
+            width: auto;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Parfüm Bilgi Deposu</h1>
+
+        <form id="perfumeForm">
+            <label for="name">Parfüm İsmi (Seçim yapın):</label>
+            <select id="name" name="name" required>
+                <option value="kab">Kab</option>
+                <option value="rat">Rat</option>
+                <option value="ytr">Ytr</option>
+            </select>
+
+            <label for="essence">Esans Oranı (ml):</label>
+            <input type="number" id="essence" name="essence" step="0.01" required>
+
+            <label for="water">Su Oranı (ml):</label>
+            <input type="number" id="water" name="water" step="0.01" required>
+
+            <label for="ethyl">Etil Alkol Oranı (ml):</label>
+            <input type="number" id="ethyl" name="ethyl" step="0.01" required>
+
+            <button type="submit">Kaydet</button>
+        </form>
+
+        <h2>Kayıtlı Parfümler</h2>
+        <table id="perfumeTable">
+            <thead>
+                <tr>
+                    <th>İsim</th>
+                    <th>Esans (ml)</th>
+                    <th>Su (ml)</th>
+                    <th>Etil Alkol (ml)</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Veriler buraya eklenecek -->
+            </tbody>
+        </table>
+
+        <h2>Ortalama Değerler</h2>
+        <table id="averageTable">
+            <thead>
+                <tr>
+                    <th>İsim</th>
+                    <th>Esans Ort.</th>
+                    <th>Su Ort.</th>
+                    <th>Etil Alkol Ort.</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Ortalamalar buraya eklenecek -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const perfumeForm = document.getElementById('perfumeForm');
+        const perfumeTableBody = document.getElementById('perfumeTable').querySelector('tbody');
+        const averageTableBody = document.getElementById('averageTable').querySelector('tbody');
+
+        let perfumes = JSON.parse(localStorage.getItem('perfumes')) || [];
+
+        perfumeForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const essence = parseFloat(document.getElementById('essence').value);
+            const water = parseFloat(document.getElementById('water').value);
+            const ethyl = parseFloat(document.getElementById('ethyl').value);
+
+            perfumes.push({ name, essence, water, ethyl });
+            localStorage.setItem('perfumes', JSON.stringify(perfumes));
+
+            updatePerfumeTable();
+            updateAverageTable();
+
+            perfumeForm.reset();
+        });
+
+        function updatePerfumeTable() {
+            perfumeTableBody.innerHTML = '';
+
+            perfumes.forEach((perfume, index) => {
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td>${perfume.name}</td>
+                    <td>${perfume.essence.toFixed(2)}</td>
+                    <td>${perfume.water.toFixed(2)}</td>
+                    <td>${perfume.ethyl.toFixed(2)}</td>
+                    <td class="action-buttons">
+                        <button onclick="editPerfume(${index})">Düzenle</button>
+                        <button onclick="deletePerfume(${index})">Sil</button>
+                    </td>
+                `;
+
+                perfumeTableBody.appendChild(row);
+            });
+        }
+
+        function updateAverageTable() {
+            const averages = {};
+
+            perfumes.forEach(perfume => {
+                if (!averages[perfume.name]) {
+                    averages[perfume.name] = { essence: [], water: [], ethyl: [] };
+                }
+
+                averages[perfume.name].essence.push(perfume.essence);
+                averages[perfume.name].water.push(perfume.water);
+                averages[perfume.name].ethyl.push(perfume.ethyl);
+            });
+
+            averageTableBody.innerHTML = '';
+
+            Object.keys(averages).forEach(name => {
+                const essenceMedian = calculateMedian(averages[name].essence);
+                const waterMedian = calculateMedian(averages[name].water);
+                const ethylMedian = calculateMedian(averages[name].ethyl);
+
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td>${name}</td>
+                    <td>${essenceMedian.toFixed(2)}</td>
+                    <td>${waterMedian.toFixed(2)}</td>
+                    <td>${ethylMedian.toFixed(2)}</td>
+                `;
+
+                averageTableBody.appendChild(row);
+            });
+        }
+
+        function calculateMedian(numbers) {
+            if (!numbers.length) return 0;
+
+            numbers.sort((a, b) => a - b);
+
+            const middle = Math.floor(numbers.length / 2);
+
+            if (numbers.length % 2 === 0) {
+                return (numbers[middle - 1] + numbers[middle]) / 2;
+            }
+
+            return numbers[middle];
+        }
+
+        function deletePerfume(index) {
+            perfumes.splice(index, 1);
+            localStorage.setItem('perfumes', JSON.stringify(perfumes));
+            updatePerfumeTable();
+            updateAverageTable();
+        }
+
+        function editPerfume(index) {
+            const perfume = perfumes[index];
+
+            document.getElementById('name').value = perfume.name;
+            document.getElementById('essence').value = perfume.essence;
+            document.getElementById('water').value = perfume.water;
+            document.getElementById('ethyl').value = perfume.ethyl;
+
+            deletePerfume(index);
+        }
+
+        // Initial rendering
+        updatePerfumeTable();
+        updateAverageTable();
+    </script>
+</body>
+</html>
